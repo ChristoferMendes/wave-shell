@@ -7,8 +7,17 @@ function WaveColors() {
     magenta: "\x1b[35m",
     cyan: "\x1b[36m",
     bold: "\x1b[1m",
+    white: "\x1b[37m",
+    bgRed: "\x1b[41m",
+    bgGreen: "\x1b[42m",
+    bgYellow: "\x1b[43m",
+    bgBlue: "\x1b[44m",
+    bgMagenta: "\x1b[45m",
+    bgCyan: "\x1b[46m",
+    bgWhite: "\x1b[47m",
+
     reset: "\x1b[0m"
-  }
+  };
 
   function red(text: string) {
     return `${cliColors.red}${text}${cliColors.reset}`;
@@ -39,7 +48,36 @@ function WaveColors() {
   }
 
   function white(text: string) {
-    return `${cliColors.bold}${text}${cliColors.reset}`;
+    return `${cliColors.white}${text}${cliColors.reset}`;
+  }
+
+  // Background color functions
+  function bgRed(text: string) {
+    return `${cliColors.bgRed}${text}${cliColors.reset}`;
+  }
+
+  function bgGreen(text: string) {
+    return `${cliColors.bgGreen}${text}${cliColors.reset}`;
+  }
+
+  function bgYellow(text: string) {
+    return `${cliColors.bgYellow}${text}${cliColors.reset}`;
+  }
+
+  function bgBlue(text: string) {
+    return `${cliColors.bgBlue}${text}${cliColors.reset}`;
+  }
+
+  function bgMagenta(text: string) {
+    return `${cliColors.bgMagenta}${text}${cliColors.reset}`;
+  }
+
+  function bgCyan(text: string) {
+    return `${cliColors.bgCyan}${text}${cliColors.reset}`;
+  }
+
+  function bgWhite(text: string) {
+    return `${cliColors.bgWhite}${text}${cliColors.reset}`;
   }
 
   return {
@@ -50,8 +88,15 @@ function WaveColors() {
     magenta,
     cyan,
     bold,
-    white
-  }
+    white,
+    bgRed,
+    bgGreen,
+    bgYellow,
+    bgBlue,
+    bgMagenta,
+    bgCyan,
+    bgWhite
+  };
 }
 
 export const waveColors = WaveColors();
