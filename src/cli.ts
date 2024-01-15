@@ -66,6 +66,7 @@ export class Cli {
     if (command) {
       command.run({
         args: parsedArguments,
+        print: this.print,
       });
 
       return this;
