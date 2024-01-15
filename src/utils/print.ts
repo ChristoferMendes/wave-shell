@@ -5,15 +5,19 @@ export type WaveTableStyle = Partial<CliTable3.TableInstanceOptions['style']>
 
 export function WavePrint(context?: string) {
   function getContext() {
-    return context ?? 'Logger'
+    return context ? `[${context}]` : '[Logger]'
   }
 
   function log(...message: string[]) {
-    return console.log(waveColors.green(`[${getContext()}]`), ...message);
+    return console.log(waveColors.green(getContext()), ...message);
   }
 
   function error(...message: string[]) {
-    return console.error(waveColors.red(`[${getContext()}]`), ...message);
+    return console.error(waveColors.red(getContext()), ...message);
+  }
+
+  function info(...message: string[]) {
+    return console.info(getContext(), ...message);
   }
 
   function table(data: string[][], options:  CliTable3.TableConstructorOptions = {}): void {
@@ -47,6 +51,7 @@ export function WavePrint(context?: string) {
   return {
     log,
     error,
-    table
+    table,
+    info
   }
 }
