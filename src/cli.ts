@@ -1,27 +1,60 @@
+import { join } from "path";
+import { readdirSync, statSync } from "fs";
 import { args } from "~/core/args.ts";
 import { StringHelper } from "~/helpers/string.helper.ts";
 import { WavePrint } from "~/utils/print.ts";
 import { waveColors } from "./utils/color.ts";
 import { WaveCommand } from "~/types.ts";
 
-
 export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
   private print: ReturnType<typeof WavePrint>;
 
-
   constructor(cliName: string) {
     this.print = WavePrint(cliName);
+    this._registerCommands();
   }
 
-  registerCommand(command: WaveCommand) {
-    this.commands.set(command.name, command);
+  private _registerCommands(directory: string = "") {
+    const commandsDirectoryPath = join(
+      process.cwd(),
+      "src",
+      "commands",
+      directory
+    );
+
+    readdirSync(commandsDirectoryPath).forEach((item) => {
+      const itemPath = join(commandsDirectoryPath, item);
+      const isDirectory = statSync(itemPath).isDirectory();
+
+      if (isDirectory) {
+        this._registerCommands(join(directory, item));
+        return;
+      }
+
+      const isCommandFile = item.endsWith("-command.ts");
+
+      if (isCommandFile) {
+        this._registerCommand(itemPath);
+        return;
+      }
+
+      const isTypeScriptFile = item.endsWith(".ts");
+
+      if (!isTypeScriptFile) return;
+
+      this._registerCommand(itemPath);
+    });
+  }
+
+  private _registerCommand(itemPath: string) {
+    const commandModule = require(itemPath);
+    this.commands.set(commandModule.default.name, commandModule.default);
   }
 
   run(): this {
     const { commandName, parsedArguments } = args();
     const commandNameColor = waveColors.red(commandName);
-
 
     if (!commandName) {
       this.displayHelp();
@@ -32,7 +65,7 @@ export class Cli {
 
     if (command) {
       command.run({
-        args: parsedArguments
+        args: parsedArguments,
       });
 
       return this;
@@ -41,10 +74,11 @@ export class Cli {
     const suggestedCommand = this.getSuggestedCommand(commandName);
 
     if (suggestedCommand) {
-      this.print.error(`Command '${commandNameColor}' does not exist. Did you mean '${suggestedCommand}'?`);
+      this.print.error(
+        `Command '${commandNameColor}' does not exist. Did you mean '${suggestedCommand}'?`
+      );
       return this;
     }
-
 
     if (!command) {
       this.print.error(`Command '${commandNameColor}' not found.`);
@@ -55,15 +89,15 @@ export class Cli {
   }
 
   displayHelp() {
-    const listOfCommandsWithDescription = Array.from(this.commands.entries())
+    const listOfCommandsWithDescription = Array.from(this.commands.entries());
 
     const tableData = listOfCommandsWithDescription.map(([name, command]) => {
-      return [waveColors.blue(name), command.description ?? '']
-    })
-    
+      return [waveColors.blue(name), command.description ?? ""];
+    });
+
     this.print.table(tableData, {
-      head: ['Command', 'Description']
-    })
+      head: ["Command", "Description"],
+    });
   }
 
   private getSuggestedCommand(query: string): string | null {
