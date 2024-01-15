@@ -1,8 +1,6 @@
 import { Cli } from "~/cli.ts";
 
-function main() {
+export function main() {
   const cli = new Cli('🌊 Wave 🌊');
   cli.run()
 }
-
-main()
