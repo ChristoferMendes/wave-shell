@@ -176,3 +176,4 @@ dist
 
 
 src/commands
+build/
