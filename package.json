@@ -6,13 +6,14 @@
     "bun-types": "latest"
   },
   "bin": {
-    "wave": "bin/wave.js"
+    "wave": "bin/wave"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun run src/main.ts"
+    "dev": "bun run src/main.ts",
+    "build": "bun build --target=bun --minify src/main.ts --outdir ./build "
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
