@@ -47,11 +47,16 @@ export function WavePrint(context?: string) {
     console.log(t.toString())
   }
 
+  function spaceLine() {
+    console.log()
+  }
+
 
   return {
     log,
     error,
     table,
-    info
+    info,
+    spaceLine
   }
 }
