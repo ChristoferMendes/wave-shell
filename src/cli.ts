@@ -1,5 +1,5 @@
 import { join } from "path";
-import { readdirSync, statSync } from "fs";
+import { readdirSync, statSync, existsSync } from "fs";
 import { args } from "~/core/args.ts";
 import { StringHelper } from "~/helpers/string.helper.ts";
 import { WavePrint } from "~/utils/print.ts";
@@ -22,6 +22,10 @@ export class Cli {
       "commands",
       directory
     );
+
+    const isDirectory = existsSync(commandsDirectoryPath);
+
+    if (!isDirectory) return this.print.error("Commands directory not found.");
 
     readdirSync(commandsDirectoryPath).forEach((item) => {
       const itemPath = join(commandsDirectoryPath, item);
@@ -49,7 +53,8 @@ export class Cli {
 
   private _registerCommand(itemPath: string) {
     const commandModule = require(itemPath);
-    this.commands.set(commandModule.default.name, commandModule.default);
+    const fileName = itemPath.split("/").pop()?.replace(".ts", "");
+    this.commands.set(commandModule.default.name ?? fileName, commandModule.default);
   }
 
   run(): this {
@@ -96,9 +101,11 @@ export class Cli {
       return [waveColors.blue(name), command.description ?? ""];
     });
 
+    this.print.spaceLine()
     this.print.table(tableData, {
       head: ["Command", "Description"],
     });
+    this.print.spaceLine()
   }
 
   private getSuggestedCommand(query: string): string | null {
