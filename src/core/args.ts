@@ -1,6 +1,5 @@
-export interface WaveArguments {
-  [key: string]: boolean | string;
-}
+import { WaveArguments } from "./types";
+
 
 export function args() {
   const args = process.argv.slice(2);
