@@ -1,14 +1,13 @@
-import { waveColors } from "~/utils/color.ts";
+import { waveColors } from "~/utils/color";
 import CliTable3 from "cli-table3";
 
-export type WaveTableStyle = Partial<CliTable3.TableInstanceOptions['style']>
 
 export function WavePrint(context?: string) {
   function getContext() {
     return context ? `[${context}]` : '[Logger]'
   }
 
-  function log(...message: string[]) {
+  function success(...message: string[]) {
     return console.log(waveColors.green(getContext()), ...message);
   }
 
@@ -53,7 +52,7 @@ export function WavePrint(context?: string) {
 
 
   return {
-    log,
+    success,
     error,
     table,
     info,
