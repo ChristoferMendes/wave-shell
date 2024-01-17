@@ -55,7 +55,6 @@ export class Cli {
 
   private _registerCommand(itemPath: string) {
     const commandModule = require(itemPath);
-    console.log(itemPath)
 
     const isInsideDirectory = itemPath.includes("-command");
     const directoryName = itemPath.split("/").pop()?.replace("-command.ts", "");
