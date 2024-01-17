@@ -1,10 +1,11 @@
 import { join } from "path";
 import { readdirSync, statSync, existsSync } from "fs";
-import { args } from "~/core/args.ts";
-import { StringHelper } from "~/helpers/string.helper.ts";
-import { WavePrint } from "~/utils/print.ts";
-import { waveColors } from "./utils/color.ts";
-import { WaveCommand } from "~/types.ts";
+import { args } from "~/core/args";
+import { StringHelper } from "~/helpers/string.helper";
+import { WavePrint } from "~/utils/print";
+import { waveColors } from "./utils/color";
+import { WaveCommand } from "~/types";
+import { compileTemplate } from "surfstar";
 
 export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
@@ -72,6 +73,7 @@ export class Cli {
       command.run({
         args: parsedArguments,
         print: this.print,
+        compileTemplate,
       });
 
       return this;

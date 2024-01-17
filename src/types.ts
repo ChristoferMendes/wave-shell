@@ -1,13 +1,19 @@
-import { WaveArguments } from "~/core/args.ts";
+import { WaveArguments } from "./core/types";
 import { WavePrint } from "./utils/print";
+import { compileTemplate } from 'surfstar'
+
 
 export interface WaveRunOptions<Args> {
   args: WaveArguments & Args;
   print: ReturnType<typeof WavePrint>;
+  compileTemplate: typeof compileTemplate;
 }
 
 export interface WaveCommand<Args = {}> {
-  name: string;
-  run: (options: WaveRunOptions<Args>) => void;
+  name?: string;
+  run: (options: WaveRunOptions<Args>) => Promise<void>;
   description?: string;
 }
+
+export * from '~/utils/types'
+export * from '~/core/types'
