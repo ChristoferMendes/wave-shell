@@ -15,7 +15,6 @@ export function args() {
 
   function parseArguments(): WaveArguments {
     const commandArgs = args.slice(1);
-    console.log(commandArgs)
 
     const reduced = commandArgs.reduce((acc, arg, index) => {
       if (arg.startsWith('--')) {
