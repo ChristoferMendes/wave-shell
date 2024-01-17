@@ -10,7 +10,6 @@ export interface WaveRunOptions<Args> {
 }
 
 export interface WaveCommand<Args = {}> {
-  name?: string;
   run: (options: WaveRunOptions<Args>) => Promise<void>;
   description?: string;
 }

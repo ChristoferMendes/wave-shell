@@ -31,8 +31,9 @@ export class Cli {
     readdirSync(commandsDirectoryPath).forEach((item) => {
       const itemPath = join(commandsDirectoryPath, item);
       const isDirectory = statSync(itemPath).isDirectory();
+      const hasCommandFile = existsSync(join(itemPath, `${item}-command.ts`));
 
-      if (isDirectory) {
+      if (isDirectory && hasCommandFile) {
         this._registerCommands(join(directory, item));
         return;
       }
@@ -54,6 +55,7 @@ export class Cli {
 
   private _registerCommand(itemPath: string) {
     const commandModule = require(itemPath);
+    console.log(itemPath)
 
     const isInsideDirectory = itemPath.includes("-command");
     const directoryName = itemPath.split("/").pop()?.replace("-command.ts", "");
