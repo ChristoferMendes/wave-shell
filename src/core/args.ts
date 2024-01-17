@@ -15,8 +15,9 @@ export function args() {
 
   function parseArguments(): WaveArguments {
     const commandArgs = args.slice(1);
+    console.log(commandArgs)
 
-    return commandArgs.reduce((acc, arg, index) => {
+    const reduced = commandArgs.reduce((acc, arg, index) => {
       if (arg.startsWith('--')) {
         const nextArg = commandArgs[index + 1];
         const key = arg.slice(2);
@@ -32,8 +33,14 @@ export function args() {
         return { ...acc, [arg.slice(1)]: true };
       }
 
-      return acc;
+      return {
+        ...acc,
+        [arg]: arg
+      }
     }, {});
+
+    console.log(reduced)
+    return reduced;
   }
 
   return {
