@@ -1,8 +1,9 @@
 {
   "name": "wave-shell",
-  "module": "src/main.ts",
+  "main": "dist/index.js",
   "type": "module",
   "devDependencies": {
+    "bun-plugin-dts": "^0.2.1",
     "bun-types": "latest"
   },
   "bin": {
@@ -13,7 +14,8 @@
   },
   "scripts": {
     "dev": "bun run src/main.ts",
-    "build": "bun build --target=bun --minify src/main.ts --outdir ./build "
+    "build": "bun build --target=bun --minify index.ts --outdir ./dist && bun run build:types",
+    "build:types": "bun run src/build-types.ts"
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
