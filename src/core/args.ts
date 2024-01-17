@@ -34,7 +34,7 @@ export function args() {
 
       return {
         ...acc,
-        [arg]: arg
+        [index]: arg
       }
     }, {});
 
