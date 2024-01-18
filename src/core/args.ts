@@ -1,12 +1,11 @@
 import { WaveArguments } from "./types";
 
-
 export function args() {
   const args = process.argv.slice(2);
   const commandName = args[0];
 
   function isBooleanFlag(arg: string): boolean {
-    return arg.startsWith('-');
+    return arg.startsWith("-");
   }
 
   function parseStringValue(value: string): boolean | string {
@@ -17,7 +16,7 @@ export function args() {
     const commandArgs = args.slice(1);
 
     const reduced = commandArgs.reduce((acc, arg, index) => {
-      if (arg.startsWith('--')) {
+      if (arg.startsWith("--")) {
         const nextArg = commandArgs[index + 1];
         const key = arg.slice(2);
 
@@ -28,22 +27,21 @@ export function args() {
         return { ...acc, [key]: true };
       }
 
-      if (arg.startsWith('-')) {
+      if (arg.startsWith("-")) {
         return { ...acc, [arg.slice(1)]: true };
       }
 
-      return {
-        ...acc,
-        [index]: arg
-      }
+      return acc;
     }, {});
 
-    console.log(reduced)
-    return reduced;
+    return {
+      ...reduced,
+      argsArray: commandArgs,
+    };
   }
 
   return {
     commandName,
-    parsedArguments: parseArguments()
+    parsedArguments: parseArguments(),
   };
 }
