@@ -9,9 +9,14 @@ export interface WaveRunOptions<Args> {
   compileTemplate: typeof compileTemplate;
 }
 
+export type ValidateErrorMessage = {
+  message: string;
+}
+
 export interface WaveCommand<Args = {}> {
   run: (options: WaveRunOptions<Args>) => Promise<void>;
   description?: string;
+  validateArgs?: (args: WaveArguments & Args) => ValidateErrorMessage;
 }
 
 export * from '~/utils/types'

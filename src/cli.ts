@@ -80,11 +80,20 @@ export class Cli {
     const command = this.commands.get(commandName);
 
     if (command) {
+      const { message } = command.validateArgs?.(parsedArguments) ?? {}
+
+      if (message) {
+        this.print.error(message)
+        return this;
+      }
+
       command.run({
         args: parsedArguments,
         print: this.print,
         compileTemplate,
       });
+
+   
 
       return this;
     }
