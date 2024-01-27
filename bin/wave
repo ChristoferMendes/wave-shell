@@ -2,4 +2,4 @@
 import { Cli } from '../src/cli';
 
 const cli = new Cli('wave');
-cli.run()
+await cli.run()
