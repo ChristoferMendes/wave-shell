@@ -6,6 +6,8 @@ import { WavePrint } from "~/utils/print";
 import { waveColors } from "./utils/color";
 import { WaveCommand } from "~/types";
 import { compileTemplate } from "surfstar";
+import { zodHelper } from "./helpers/zod.helper";
+import { prompt } from "./utils/prompt";
 
 export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
@@ -63,13 +65,16 @@ export class Cli {
       this.commands.set(directoryName, commandModule.default);
       return;
     }
-    
+
     const fileName = itemPath.split("/").pop()?.replace(".ts", "");
-    this.commands.set(commandModule.default.name ?? fileName, commandModule.default);
+    this.commands.set(
+      commandModule.default.name ?? fileName,
+      commandModule.default
+    );
   }
 
-  run(): this {
-    const { commandName, parsedArguments } = args();
+  async run(): Promise<this> {
+    const { commandName, argsArray, namedArgs } = args();
     const commandNameColor = waveColors.red(commandName);
 
     if (!commandName) {
@@ -80,20 +85,45 @@ export class Cli {
     const command = this.commands.get(commandName);
 
     if (command) {
-      const { message } = command.validateArgs?.(parsedArguments) ?? {}
+      const hasValidateArgs = command.argsSchema !== undefined;
+  
+      if (!hasValidateArgs) {
+         await command.run({
+          args: { argsArray, namedArgs },
+          print: this.print,
+          compileTemplate,
+          prompt
+        })
 
-      if (message) {
-        this.print.error(message)
+        return this
+      }
+
+      const { argsArraySchema, namedArgsSchema } =
+        command.argsSchema?.() ?? {};
+
+      const argsArrayResult = argsArraySchema?.safeParse(argsArray);
+      const namedArgsResult = namedArgsSchema?.safeParse(namedArgs);
+
+      if (argsArrayResult?.success === false) {
+        const errorMessage = zodHelper.formatSafeParseErrorMessage(argsArrayResult.error);
+
+        this.print.error(errorMessage);
+        return this
+      }
+
+      if (namedArgsResult?.success === false) {
+        const errorMessage = zodHelper.formatSafeParseErrorMessage(namedArgsResult.error);
+
+        this.print.error(errorMessage);
         return this;
       }
 
-      command.run({
-        args: parsedArguments,
+      await command.run({
+        args: { argsArray, namedArgs },
         print: this.print,
         compileTemplate,
-      });
-
-   
+        prompt
+      })
 
       return this;
     }
@@ -116,17 +146,18 @@ export class Cli {
   }
 
   displayHelp() {
-    const listOfCommandsWithDescription = Array.from(this.commands.entries());
 
-    const tableData = listOfCommandsWithDescription.map(([name, command]) => {
-      return [waveColors.blue(name), command.description ?? ""];
-    });
-
-    this.print.spaceLine()
-    this.print.table(tableData, {
+    this.print.spaceLine();
+    this.print.table(this._getHelpTableData, {
       head: ["Command", "Description"],
     });
-    this.print.spaceLine()
+    this.print.spaceLine();
+  }
+
+  private get _getHelpTableData () {
+    return Array.from(this.commands.entries()).map(([name, command]) => {
+      return [waveColors.blue(name), command.description ?? ""];
+    });
   }
 
   private getSuggestedCommand(query: string): string | null {
