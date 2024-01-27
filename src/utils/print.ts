@@ -50,12 +50,17 @@ export function WavePrint(context?: string) {
     console.log()
   }
 
+  function clearLastLines (count: number) {
+    process.stdout.moveCursor(0, -count)
+    process.stdout.clearScreenDown()
+  }
 
   return {
     success,
     error,
     table,
     info,
-    spaceLine
+    spaceLine,
+    clearLastLines
   }
 }
