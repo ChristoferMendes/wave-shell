@@ -8,7 +8,7 @@
     "bun-types": "latest"
   },
   "bin": {
-    "wave": "bin/wave"
+    "wave-shell": "bin/wave"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
