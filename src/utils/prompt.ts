@@ -1,8 +1,12 @@
 import inquirer from 'inquirer';
 
+type Answer = {
+  value: string
+}
+
 function Prompt () {
   function ask(question: string) {
-    return inquirer.prompt([
+    return inquirer.prompt<Answer>([
       {
         type: 'input',
         name: 'value',
