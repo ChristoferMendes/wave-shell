@@ -13,14 +13,14 @@ export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
   private print: ReturnType<typeof WavePrint>;
 
-  constructor(cliName: string) {
+  constructor(cliName: string, dirName: string) {
     this.print = WavePrint(cliName);
-    this._registerCommands();
+    this._registerCommands(dirName);
   }
 
-  private _registerCommands(directory: string = "") {
+  private _registerCommands(dirName: string, directory: string = "") {
     const commandsDirectoryPath = join(
-      process.cwd(),
+      dirName,
       "src",
       "commands",
       directory
