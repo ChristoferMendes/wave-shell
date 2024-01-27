@@ -1,4 +1,4 @@
 export interface WaveArguments {
-  [key: string]: boolean | string | string[];
   argsArray: string[];
+  namedArgs: Record<string, string | boolean>;
 }
