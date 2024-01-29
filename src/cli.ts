@@ -36,7 +36,7 @@ export class Cli {
       const hasCommandFile = existsSync(join(itemPath, `${item}-command.ts`));
 
       if (isDirectory && hasCommandFile) {
-        this._registerCommands(join(directory, item));
+        this._registerCommands(dirName, join(directory, item));
         return;
       }
 
