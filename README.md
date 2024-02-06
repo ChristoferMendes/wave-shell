@@ -17,14 +17,12 @@ Wave Shell is more than just a name; it's a representation of the dynamic and se
 
 - **Parsed command lines arguments:**: All arguments parsed beautifully (booleans, strings, numbers)
 
+- **File Template**: Create files passing dynamic variables to our *.surf* files!. Powered by [Surfstar](https://github.com/ChristoferMendes/surfstar)
+
 ### Getting Started 🌊
 
-Ready to catch the wave? Dive into our [documentation](link-to-docs) to get started with Wave Shell. Whether you're a beginner or an experienced developer, we've got you covered with easy-to-follow guides and examples.
-
-### Installation 🌐
-
 ```bash
-npm install -g wave-shell
+bunx wave-cli create wave
 ```
 
 ### Usage ✨
@@ -35,7 +33,7 @@ import { WavePrint, WaveCommand } from "wave-shell";
 export default {
   description: 'Hello world command',
   run: ({ args, print }) => {
-    const { world } = args; //world parsed as a boolean
+    const { world } = args.namedArgs; //world parsed as a boolean
 
     if (!world) {
       return print.error("We expected --world to say the phrase 😓")
