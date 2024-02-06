@@ -1,6 +1,5 @@
-import { waveColors } from "~/utils/color";
 import CliTable3 from "cli-table3";
-
+import { waveColors } from "~/utils/color";
 
 export function WavePrint(context?: string) {
   function getContext() {
