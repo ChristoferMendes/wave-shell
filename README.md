@@ -5,6 +5,10 @@
 
 ![wavy(1)](https://github.com/ChristoferMendes/wave-shell/assets/107426464/2cb37816-36da-438c-95dd-419e2ecdba49)
 
+### Requirements
+
+- [Bun](https://bun.sh/) installed
+
 
 ## 🏄‍♂️ Ride the Wave of Efficiency with Wave Shell 🏄‍♀️
 
