@@ -24,7 +24,7 @@ Ready to catch the wave? Dive into our [documentation](link-to-docs) to get star
 ### Installation 🌐
 
 ```bash
-npm install -g wave-shell
+bunx wave-shell-cli create
 ```
 
 ### Usage ✨
