@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it, jest, spyOn } from 'bun:test';
+import { join } from 'path';
 import { Cli } from './cli';
 import { WavePrint } from './utils/print';
 
 const print = WavePrint();
+const projectRoot = join(__dirname, '../')
 
 describe('Cli', () => {
   let cli: Cli;
 
   beforeEach(() => {
-    cli = new Cli('wave-shell');
+    cli = new Cli('wave-shell', projectRoot);
     const hasCommand = process.argv.length > 2;
 
     if (hasCommand) {
