@@ -31,11 +31,11 @@ bunx wave-cli create wave
 ### Usage ✨
 `src/commands/hello.ts`
 ```ts
-import { WavePrint, WaveCommand } from "wave-shell";
+import { WaveCommand } from "wave-shell";
 
 export default {
   description: 'Hello world command',
-  run: ({ args, print }) => {
+  run: async ({ args, print }) => {
     const { world } = args.namedArgs; //world parsed as a boolean
 
     if (!world) {
@@ -51,4 +51,36 @@ export default {
 #### Typing this ⬇ will trigger the `run` method above ⬆ 
 ```shell
 wave hello --world
+```
+
+## Usage with [Surfstar](https://github.com/ChristoferMendes/surfstar)
+
+`src/templates/hello-world.surf`
+```surf
+Hello {{ person.name }}! I see that you are {{ years }} years old. Nice!
+```
+
+`src/commands/hello-world.ts`
+```ts
+import { WaveCommand } from "wave-shell";
+import { join } from 'path';
+
+function getFilePath() {
+  const templateFolder = join(__dirname, '../templates');
+
+  return join(templateFolder, 'hello-world.surf');
+}
+
+export default {
+  run: async ({ compileTemplate }) => {
+    const filePath = getFilePath();
+
+    const result = await compileTemplate(filePath, {
+      person: { name: 'John' },
+      years: 32
+    });
+
+    Bun.write('hello.txt', result)
+  }
+} as WaveCommand
 ```
