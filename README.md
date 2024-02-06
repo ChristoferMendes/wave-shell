@@ -10,6 +10,8 @@
 
 Welcome to Wave Shell, where every line of code is a powerful wave propelling you forward in your development journey. Just like the rhythmic and fluid nature of ocean waves, our CLI tool is designed to make your coding experience smooth, efficient, and energizing.
 
+### Wave Shell is heavily inspired by [Gluegun](https://github.com/infinitered/gluegun)! Please go there to take a look.
+
 ### Why Wave Shell?
 
 Wave Shell is more than just a name; it's a representation of the dynamic and seamless development experience we strive to provide. Imagine coding as effortlessly as riding the perfect wave—surfing through your projects with grace and power. Our CLI tool aims to bring that natural flow to your development process, ensuring you stay productive and energized in your daily work.
