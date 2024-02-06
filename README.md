@@ -3,6 +3,9 @@
   # 🌊 WAVE SHELL 🌊
 </div>
 
+![wavy(1)](https://github.com/ChristoferMendes/wave-shell/assets/107426464/2cb37816-36da-438c-95dd-419e2ecdba49)
+
+
 ## 🏄‍♂️ Ride the Wave of Efficiency with Wave Shell 🏄‍♀️
 
 Welcome to Wave Shell, where every line of code is a powerful wave propelling you forward in your development journey. Just like the rhythmic and fluid nature of ocean waves, our CLI tool is designed to make your coding experience smooth, efficient, and energizing.
