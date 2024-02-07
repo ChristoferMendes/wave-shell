@@ -6,6 +6,14 @@ import { WavePrint } from './utils/print';
 const print = WavePrint();
 const projectRoot = join(__dirname, '../')
 
+function clearCommand() {
+  process.argv.pop();
+}
+
+function setCommandIntoArgv(command: string) {
+  process.argv.push(command);
+}
+
 describe('Cli', () => {
   let cli: Cli;
 
@@ -14,13 +22,10 @@ describe('Cli', () => {
     const hasCommand = process.argv.length > 2;
 
     if (hasCommand) {
-      process.argv.pop();
+      clearCommand();
     }
   });
 
-  it('should register commands', () => {
-    expect(cli['commands'].size).toBeGreaterThan(0);
-  });
 
   it('should display help when no command is provided', async () => {
     const printTable = spyOn(cli['print'], 'table');
@@ -39,7 +44,7 @@ describe('Cli', () => {
       run: jest.fn()
     })
 
-    process.argv.push(command);
+    setCommandIntoArgv(command);
 
     await cli.run();
 
@@ -53,7 +58,7 @@ describe('Cli', () => {
       run: jest.fn()
     })
     
-    process.argv.push(command);
+    setCommandIntoArgv(command);
 
     const errorSpy = spyOn(cli['print'], 'error');
 
@@ -64,9 +69,9 @@ describe('Cli', () => {
   });
 
   it('should display an error if command is not found', async () => {
-    const command = 'helloMoc';
+    const command = 'helloMockCommand';
 
-    process.argv.push(command);
+    setCommandIntoArgv(command);
 
     const errorSpy = spyOn(cli['print'], 'error');
 

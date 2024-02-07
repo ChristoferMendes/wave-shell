@@ -1,12 +1,12 @@
+import { existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
-import { readdirSync, statSync, existsSync } from "fs";
+import { compileTemplate } from "surfstar";
 import { args } from "~/core/args";
 import { StringHelper } from "~/helpers/string.helper";
-import { WavePrint } from "~/utils/print";
-import { waveColors } from "./utils/color";
 import { WaveCommand } from "~/types";
-import { compileTemplate } from "surfstar";
+import { WavePrint } from "~/utils/print";
 import { zodHelper } from "./helpers/zod.helper";
+import { waveColors } from "./utils/color";
 import { prompt } from "./utils/prompt";
 
 export class Cli {
@@ -19,12 +19,7 @@ export class Cli {
   }
 
   private _registerCommands(dirName: string, directory: string = "") {
-    const commandsDirectoryPath = join(
-      dirName,
-      "src",
-      "commands",
-      directory
-    );
+    const commandsDirectoryPath = join(dirName, "src", "commands", directory);
 
     const isDirectory = existsSync(commandsDirectoryPath);
 
@@ -86,33 +81,36 @@ export class Cli {
 
     if (command) {
       const hasValidateArgs = command.argsSchema !== undefined;
-  
+
       if (!hasValidateArgs) {
-         await command.run({
+        await command.run({
           args: { argsArray, namedArgs },
           print: this.print,
           compileTemplate,
-          prompt
-        })
+          prompt,
+        });
 
-        return this
+        return this;
       }
 
-      const { argsArraySchema, namedArgsSchema } =
-        command.argsSchema?.() ?? {};
+      const { argsArraySchema, namedArgsSchema } = command.argsSchema?.() ?? {};
 
       const argsArrayResult = argsArraySchema?.safeParse(argsArray);
       const namedArgsResult = namedArgsSchema?.safeParse(namedArgs);
 
       if (argsArrayResult?.success === false) {
-        const errorMessage = zodHelper.formatSafeParseErrorMessage(argsArrayResult.error);
+        const errorMessage = zodHelper.formatSafeParseErrorMessage(
+          argsArrayResult.error
+        );
 
         this.print.error(errorMessage);
-        return this
+        return this;
       }
 
       if (namedArgsResult?.success === false) {
-        const errorMessage = zodHelper.formatSafeParseErrorMessage(namedArgsResult.error);
+        const errorMessage = zodHelper.formatSafeParseErrorMessage(
+          namedArgsResult.error
+        );
 
         this.print.error(errorMessage);
         return this;
@@ -122,8 +120,8 @@ export class Cli {
         args: { argsArray, namedArgs },
         print: this.print,
         compileTemplate,
-        prompt
-      })
+        prompt,
+      });
 
       return this;
     }
@@ -146,7 +144,6 @@ export class Cli {
   }
 
   displayHelp() {
-
     this.print.spaceLine();
     this.print.table(this._getHelpTableData, {
       head: ["Command", "Description"],
@@ -154,7 +151,7 @@ export class Cli {
     this.print.spaceLine();
   }
 
-  private get _getHelpTableData () {
+  private get _getHelpTableData() {
     return Array.from(this.commands.entries()).map(([name, command]) => {
       return [waveColors.blue(name), command.description ?? ""];
     });
@@ -164,7 +161,9 @@ export class Cli {
     const commandNames = Array.from(this.commands.keys());
     const matches = StringHelper.findBestMatch(query, commandNames);
 
-    const bestMatch = matches.bestMatch;
+    const { bestMatch } = matches ?? {}
+
+    if (!bestMatch) return null;
 
     const startsWithBestMatch = bestMatch.target.startsWith(query);
 
