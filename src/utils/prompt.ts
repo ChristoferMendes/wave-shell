@@ -1,46 +1,110 @@
-import inquirer from 'inquirer';
+import * as readline from "readline";
+import { waveColors } from "./color";
 
-type Answer = {
-  value: string
-}
-
-function Prompt () {
-  function ask(question: string) {
-    return inquirer.prompt<Answer>([
-      {
-        type: 'input',
-        name: 'value',
-        message: question
-      }
-    ])
+export function Prompt() {
+  function createRl() {
+    return readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
   }
 
-  function confirm(question: string) {
-    return inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'value',
-        message: question
-      }
-    ])
+
+  function ask(question: string): Promise<string> {
+    const rl = createRl();
+
+    return new Promise((resolve) => {
+      rl.question(question, (answer) => {
+        rl.pause();
+        resolve(answer);
+      });
+    });
   }
 
-  function select(question: string, options: string[]) {
-    return inquirer.prompt([
-      {
-        type: 'list',
-        name: 'value',
-        message: question,
-        choices: options
+  function confirm(question: string): Promise<boolean> {
+    const rl = createRl();
+
+    return new Promise((resolve) => {
+      rl.question(question + " (y/n) ", (answer) => {
+        rl.close();
+        resolve(answer.toLowerCase().startsWith("y"));
+      });
+    });
+  }
+
+  function select(question: string, options: string[]): Promise<string> {
+    const rl = createRl();
+    
+    let index = 0;
+    let isSelected = false;
+
+    function clearScreen() {
+      readline.cursorTo(process.stdout, 0, 0);
+      readline.clearScreenDown(process.stdout);
+    }
+
+    function writeQuestion() {
+      process.stdout.write(question + "\n");
+    }
+
+    function handleWriteSelectedOption(optionColored: string, i: number) {
+      const withOptionSelected = i === index ? waveColors.green("✔ ") : " ";
+
+      return process.stdout.write(`${withOptionSelected}${optionColored}\n`);
+    }
+
+    function writeOptions() {
+      options.forEach((option, i) => {
+        const optionColored =
+          i === index ? waveColors.green(option) : waveColors.white(option);
+        const prefix = i === index ? "\x1b[32m> " : " ";
+
+        if (!isSelected) {
+          process.stdout.write(`${prefix}${optionColored}\n`);
+          return;
+        }
+        
+        handleWriteSelectedOption(optionColored, i);
+      });
+    }
+
+    function handleKeyPress(
+      key: { name: string },
+      resolve: (value: string | PromiseLike<string>) => void
+    ) {
+      const UP_INDEX_CHANGE = -1;
+      const DOWN_INDEX_CHANGE = 1;
+      const MIN_INDEX = 0;
+      const MAX_INDEX = options.length - 1;
+    
+      if (key.name === "up") index = Math.max(index + UP_INDEX_CHANGE, MIN_INDEX);
+      else if (key.name === "down") index = Math.min(index + DOWN_INDEX_CHANGE, MAX_INDEX);
+      else if (key.name === "return") {
+        process.stdin.removeAllListeners("keypress");
+        rl.pause();
+        isSelected = true;
+        resolve(options[index]);
       }
-    ])
+      render();
+    }
+
+    function render() {
+      clearScreen();
+      writeQuestion();
+      writeOptions();
+    }
+
+    return new Promise((resolve) => {
+      process.stdin.on("keypress", (_, key) => handleKeyPress(key, resolve));
+      render();
+    });
   }
 
   return {
     ask,
     confirm,
-    select
-  }
+    select,
+  };
 }
 
-export const prompt = Prompt()
+export const prompt = Prompt();
