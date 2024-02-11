@@ -1,7 +1,7 @@
+import { compileTemplate } from "surfstar";
 import { z } from "zod";
 import { WaveArguments } from "./core/types";
 import { WavePrint } from "./utils/print";
-import { compileTemplate } from "surfstar";
 import { prompt } from "./utils/prompt";
 
 export interface WaveCommand<Args = {}> {
@@ -24,5 +24,8 @@ export interface WaveRunOptions<ArgsT = {}> {
   compileTemplate: typeof compileTemplate;
 }
 
-export * from "~/utils/types";
+export type WavePrompt = typeof prompt;
+
 export * from "~/core/types";
+export * from "~/utils/types";
+
