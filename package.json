@@ -16,8 +16,7 @@
   },
   "scripts": {
     "dev": "bun run src/main.ts",
-    "build": "bun build --target=bun --minify index.ts --outdir ./dist && bun run build:types",
-    "build:types": "bun run src/build-types.ts"
+    "build": "bun run src/builder.ts"
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
