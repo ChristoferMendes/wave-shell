@@ -21,14 +21,14 @@ export class Cli {
   }
 
   private _defineCommandExtensionBasedOnFiles (projectRoot: string) {
-    const hasBuildFileOnDist = existsSync(join(projectRoot, 'dist', '.built'))
+    const isDevMode = existsSync(join(projectRoot, 'src'));
 
-    if (hasBuildFileOnDist) {
-      this._commandExtension = '.js'
+    if (isDevMode) {
+      this._commandExtension = '.ts'
       return
     }
 
-    this._commandExtension = '.ts'
+    this._commandExtension = '.js'
   }
 
   private _registerCommands(projectRoot: string, directory: string = "") {
