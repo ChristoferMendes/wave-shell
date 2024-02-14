@@ -5,6 +5,7 @@
   "version": "0.0.21",
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
+    "bun-plugin-dts": "^0.2.1",
     "bun-types": "latest"
   },
   "bin": {
@@ -20,7 +21,6 @@
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
-    "bun-plugin-dts": "^0.2.1",
     "require-all": "^3.0.0",
     "surfstar": "^0.0.2",
     "zod": "^3.22.4"
