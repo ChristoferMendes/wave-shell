@@ -1,0 +1,10 @@
+.github
+.idea
+bin
+node_modules
+src
+index.ts
+tsconfig.json
+package.json
+.git
+.gitignore
