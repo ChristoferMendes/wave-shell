@@ -13,17 +13,22 @@ export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
   private print: ReturnType<typeof WavePrint>;
   private _commandExtension: string = '';
+  private readonly _projectRoot: string;
 
   constructor(cliName: string, projectRoot: string) {
     this.print = WavePrint(cliName);
-    this._defineCommandExtensionBasedOnFiles(projectRoot)
-    this._registerCommands(projectRoot);
+    this._projectRoot = projectRoot;
+    this._defineCommandExtensionBasedOnFiles()
+    this._registerCommands();
   }
 
-  private _defineCommandExtensionBasedOnFiles (projectRoot: string) {
-    const isDevMode = existsSync(join(projectRoot, 'src'));
+  private get isDevMode () {
+   return  existsSync(join(this._projectRoot, 'src'))
+  }
 
-    if (isDevMode) {
+  private _defineCommandExtensionBasedOnFiles () {
+
+    if (this.isDevMode) {
       this._commandExtension = '.ts'
       return
     }
@@ -31,8 +36,9 @@ export class Cli {
     this._commandExtension = '.js'
   }
 
-  private _registerCommands(projectRoot: string, directory: string = "") {
-    const commandsDirectoryPath = join(projectRoot, "src", "commands", directory);
+  private _registerCommands(directory: string = "") {
+    const codeDir = this.isDevMode ? 'src' : 'dist/src'
+    const commandsDirectoryPath = join(this._projectRoot, codeDir, "commands", directory);
 
     const isDirectory = existsSync(commandsDirectoryPath);
 
@@ -46,7 +52,7 @@ export class Cli {
       
 
       if (isDirectory && hasCommandFile) {
-        this._registerCommands(projectRoot, join(directory, item));
+        this._registerCommands(join(directory, item));
         return;
       }
 
