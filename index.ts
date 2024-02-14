@@ -1,6 +1,17 @@
 export * from '~/cli'
 
-export * from '~/types'
+export {
+  type WaveArguments,
+  type WaveCommand,
+  type WavePrompt,
+  type WaveRunOptions,
+  type WaveTableStyle
+} from '~/types'
 
-export * from '~/utils'
+export {
+  Prompt,
+  WavePrint,
+  prompt,
+  waveColors
+} from '~/utils'
 
