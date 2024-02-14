@@ -22,7 +22,7 @@
   "dependencies": {
     "cli-table3": "^0.6.3",
     "require-all": "^3.0.0",
-    "surfstar": "^0.0.2",
+    "surfstar": "0.0.7",
     "zod": "^3.22.4"
   }
 }
