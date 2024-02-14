@@ -7,6 +7,7 @@ export {
   WaveRunOptions,
   WaveTableStyle
 } from '~/types'
+
 export {
   Prompt,
   WavePrint,
