@@ -17,7 +17,7 @@
   "dependencies": {
     "cli-table3": "^0.6.3",
     "require-all": "^3.0.0",
-    "surfstar": "0.0.7",
+    "surfstar": "0.0.8",
     "zod": "^3.22.4"
   },
   "devDependencies": {
