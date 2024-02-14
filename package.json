@@ -16,7 +16,7 @@
   },
   "scripts": {
     "dev": "bun run src/main.ts",
-    "build": "bun run src/builder.ts"
+    "build": "bun src/builder.ts"
   },
   "dependencies": {
     "cli-table3": "^0.6.3",

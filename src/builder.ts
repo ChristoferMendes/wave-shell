@@ -11,6 +11,7 @@ async function build() {
     outdir: 'dist',
     plugins: [dts()],
     target: 'bun',
+    minify: true
   })
 
   print.success('Project built!')
