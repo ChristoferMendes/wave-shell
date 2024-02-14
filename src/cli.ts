@@ -12,14 +12,27 @@ import { prompt } from "./utils/prompt";
 export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
   private print: ReturnType<typeof WavePrint>;
+  private _commandExtension: string = '';
 
-  constructor(cliName: string, dirName: string) {
+  constructor(cliName: string, projectRoot: string) {
     this.print = WavePrint(cliName);
-    this._registerCommands(dirName);
+    this._defineCommandExtensionBasedOnFiles(projectRoot)
+    this._registerCommands(projectRoot);
   }
 
-  private _registerCommands(dirName: string, directory: string = "") {
-    const commandsDirectoryPath = join(dirName, "src", "commands", directory);
+  private _defineCommandExtensionBasedOnFiles (projectRoot: string) {
+    const hasBuildFileOnDist = existsSync(join(projectRoot, 'dist', '.built'))
+
+    if (hasBuildFileOnDist) {
+      this._commandExtension = '.js'
+      return
+    }
+
+    this._commandExtension = '.ts'
+  }
+
+  private _registerCommands(projectRoot: string, directory: string = "") {
+    const commandsDirectoryPath = join(projectRoot, "src", "commands", directory);
 
     const isDirectory = existsSync(commandsDirectoryPath);
 
@@ -28,23 +41,23 @@ export class Cli {
     readdirSync(commandsDirectoryPath).forEach((item) => {
       const itemPath = join(commandsDirectoryPath, item);
       const isDirectory = statSync(itemPath).isDirectory();
-      const hasCommandFile = existsSync(join(itemPath, `${item}-command.ts`));
+
+      const hasCommandFile = existsSync(join(itemPath, `${item}-command${this._commandExtension}`));
+      
 
       if (isDirectory && hasCommandFile) {
-        this._registerCommands(dirName, join(directory, item));
+        this._registerCommands(projectRoot, join(directory, item));
         return;
       }
 
-      const isCommandFile = item.endsWith("-command.ts");
+      const isCommandFile = item.endsWith(`-command${this._commandExtension}`);
 
       if (isCommandFile) {
         this._registerCommand(itemPath);
         return;
       }
 
-      const isTypeScriptFile = item.endsWith(".ts");
-
-      if (!isTypeScriptFile) return;
+      if (!item.endsWith(this._commandExtension)) return;
 
       this._registerCommand(itemPath);
     });
@@ -54,14 +67,14 @@ export class Cli {
     const commandModule = require(itemPath);
 
     const isInsideDirectory = itemPath.includes("-command");
-    const directoryName = itemPath.split("/").pop()?.replace("-command.ts", "");
+    const directoryName = itemPath.split("/").pop()?.replace(`-command.${this._commandExtension}`, "");
 
     if (isInsideDirectory && directoryName) {
       this.commands.set(directoryName, commandModule.default);
       return;
     }
 
-    const fileName = itemPath.split("/").pop()?.replace(".ts", "");
+    const fileName = itemPath.split("/").pop()?.replace(this._commandExtension, "");
     this.commands.set(
       commandModule.default.name ?? fileName,
       commandModule.default
