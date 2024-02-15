@@ -23,7 +23,7 @@ export class Cli {
   }
 
   private get isDevMode () {
-   return  existsSync(join(this._projectRoot, 'src'))
+   return existsSync(join(this._projectRoot, 'src'))
   }
 
   private _defineCommandExtensionBasedOnFiles () {
@@ -50,7 +50,6 @@ export class Cli {
 
       const hasCommandFile = existsSync(join(itemPath, `${item}-command${this._commandExtension}`));
       
-
       if (isDirectory && hasCommandFile) {
         this._registerCommands(join(directory, item));
         return;
