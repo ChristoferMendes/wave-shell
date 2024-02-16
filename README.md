@@ -28,6 +28,8 @@ Wave Shell is more than just a name; it's a representation of the dynamic and se
 
 - **File Template**: Create files passing dynamic variables to our *.surf* files!. Powered by [Surfstar](https://github.com/ChristoferMendes/surfstar)
 
+### Docs (WIP): https://docs.wave-shell.dev
+
 ### Getting Started 🌊
 
 ```bash
