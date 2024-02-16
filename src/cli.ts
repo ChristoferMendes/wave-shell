@@ -22,24 +22,22 @@ export class Cli {
     this._registerCommands();
   }
 
-  private get isDevMode () {
-   return existsSync(join(this._projectRoot, 'src'))
+  private get isProdMode () {
+   return this._projectRoot.endsWith('dist')
   }
 
   private _defineCommandExtensionBasedOnFiles () {
-
-    if (this.isDevMode) {
-      this._commandExtension = '.ts'
+    if (this.isProdMode) {
+      this._commandExtension = '.js'
       return
     }
-
-    this._commandExtension = '.js'
+    
+    this._commandExtension = '.ts'
   }
 
   private _registerCommands(directory: string = "") {
-    const codeDir = this.isDevMode ? 'src' : 'dist/src'
-    const commandsDirectoryPath = join(this._projectRoot, codeDir, "commands", directory);
-
+    const commandsDirectoryPath = join(this._projectRoot, 'src', "commands", directory);
+    
     const isDirectory = existsSync(commandsDirectoryPath);
 
     if (!isDirectory) return this.print.error("Commands directory not found.");
