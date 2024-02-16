@@ -72,7 +72,7 @@ import { WaveCommand } from "wave-shell";
 import { join } from 'path';
 
 function getFilePath() {
-  const templateFolder = join(__dirname, '../templates');
+  const templateFolder = join(import.meta.dir, '../templates');
 
   return join(templateFolder, 'hello-world.surf');
 }

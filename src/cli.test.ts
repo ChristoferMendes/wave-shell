@@ -4,7 +4,7 @@ import { Cli } from './cli';
 import { WavePrint } from './utils/print';
 
 const print = WavePrint();
-const projectRoot = join(__dirname, '../')
+const projectRoot = join(import.meta.dir, '../')
 
 function clearCommand() {
   process.argv.pop();

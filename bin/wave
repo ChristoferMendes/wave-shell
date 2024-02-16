@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
-import { Cli } from '../src/cli';
 import { join } from 'path';
+import { Cli } from '../src/cli';
 
-const projectRoot = join(__dirname, '..');
+const projectRoot = join(import.meta.dir, '..');
 const cli = new Cli('wave', projectRoot);
 await cli.run()
