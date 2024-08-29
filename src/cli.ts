@@ -2,7 +2,7 @@ import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { compileTemplate } from 'surfstar';
 import { args } from '~/core/args';
-import { StringHelper } from '~/helpers/string.helper';
+import { stringHelper } from '~/helpers/string.helper';
 import type { WaveCommand } from '~/types';
 import { WavePrint } from '~/utils/print';
 import { zodHelper } from './helpers/zod.helper';
@@ -184,7 +184,7 @@ export class Cli {
 
   private getSuggestedCommand(query: string): string | null {
     const commandNames = Array.from(this.commands.keys());
-    const matches = StringHelper.findBestMatch(query, commandNames);
+    const matches = stringHelper.findBestMatch(query, commandNames);
 
     const { bestMatch } = matches ?? {};
 

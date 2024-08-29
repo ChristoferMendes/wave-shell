@@ -24,12 +24,12 @@ export function args() {
           // biome-ignore lint/performance/noAccumulatingSpread: @TODO: Fix this
           return { ...acc, [key]: parseStringValue(nextArg) };
         }
-   // biome-ignore lint/performance/noAccumulatingSpread: @TODO: Fix this
+        // biome-ignore lint/performance/noAccumulatingSpread: @TODO: Fix this
         return { ...acc, [key]: true };
       }
 
       if (arg.startsWith('-')) {
-           // biome-ignore lint/performance/noAccumulatingSpread: @TODO: Fix this
+        // biome-ignore lint/performance/noAccumulatingSpread: @TODO: Fix this
         return { ...acc, [arg.slice(1)]: true };
       }
 

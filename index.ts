@@ -1,7 +1,7 @@
-export * from '~/cli'
+export * from '~/cli';
 
-export * from '~/types'
+export * from '~/types';
 
-export * from '~/utils'
+export * from '~/utils';
 
-export * from '~/core/errors'
+export * from '~/core/errors';

@@ -1,1 +1,1 @@
-export * from './wave-error'
+export * from './wave-error';

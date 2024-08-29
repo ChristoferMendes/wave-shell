@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { StringHelper } from '../string.helper';
+import { stringHelper } from '../string.helper';
 
 describe('StringHelper', () => {
   describe('findBestMatch', () => {
@@ -7,13 +7,13 @@ describe('StringHelper', () => {
       const mainString = 'hello';
       const targetStrings = ['hello', 'world', 'help', 'hell'];
 
-      const result = StringHelper.findBestMatch(mainString, targetStrings);
+      const result = stringHelper.findBestMatch(mainString, targetStrings);
 
       expect(result.ratings).toEqual([
         { target: 'hello', rating: 1 },
         { target: 'world', rating: 0 },
         { target: 'help', rating: 0.5714285714285714 },
-        { target: 'hell', rating: 0.8571428571428571 },
+        { target: 'hell', rating: 0.8571428571428571 }
       ]);
       expect(result.bestMatch).toEqual({ target: 'hello', rating: 1 });
       expect(result.bestMatchIndex).toBe(0);
@@ -25,7 +25,7 @@ describe('StringHelper', () => {
       const first = 'hello';
       const second = 'help';
 
-      const result = StringHelper.compareTwoStrings(first, second);
+      const result = stringHelper.compareTwoStrings(first, second);
 
       expect(result).toBe(0.5714285714285714);
     });
@@ -34,7 +34,7 @@ describe('StringHelper', () => {
       const first = 'hello';
       const second = 'hello';
 
-      const result = StringHelper.compareTwoStrings(first, second);
+      const result = stringHelper.compareTwoStrings(first, second);
 
       expect(result).toBe(1);
     });
@@ -43,8 +43,8 @@ describe('StringHelper', () => {
       const first = 'h';
       const second = 'help';
 
-      const result1 = StringHelper.compareTwoStrings(first, second);
-      const result2 = StringHelper.compareTwoStrings(second, first);
+      const result1 = stringHelper.compareTwoStrings(first, second);
+      const result2 = stringHelper.compareTwoStrings(second, first);
 
       expect(result1).toBe(0);
       expect(result2).toBe(0);

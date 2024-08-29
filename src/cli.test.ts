@@ -4,7 +4,7 @@ import { Cli } from './cli';
 import { WavePrint } from './utils/print';
 
 const print = WavePrint();
-const projectRoot = join(import.meta.dir, '../')
+const projectRoot = join(import.meta.dir, '../');
 
 function clearCommand() {
   process.argv.pop();
@@ -26,23 +26,22 @@ describe('Cli', () => {
     }
   });
 
-
   it('should display help when no command is provided', async () => {
     const printTable = spyOn(cli.print, 'table');
 
     await cli.run();
     print.clearLastLines(5);
-    
+
     expect(printTable).toHaveBeenCalledWith(cli._getHelpTableData, {
-      head: ['Command', 'Description'],
+      head: ['Command', 'Description']
     });
   });
 
   it('should run a command', async () => {
-    const command = 'tMock'
+    const command = 'tMock';
     cli.commands.set(command, {
       run: jest.fn()
-    })
+    });
 
     setCommandIntoArgv(command);
 
@@ -56,8 +55,8 @@ describe('Cli', () => {
 
     cli.commands.set('helloMock', {
       run: jest.fn()
-    })
-    
+    });
+
     setCommandIntoArgv(command);
 
     const errorSpy = spyOn(cli.print, 'error');
@@ -65,7 +64,9 @@ describe('Cli', () => {
     await cli.run();
     print.clearLastLines(1);
 
-    expect(errorSpy).toHaveBeenCalledWith(`Command '\u001B[31m${command}\u001B[0m' does not exist. Did you mean '\u001B[33mhelloMock\u001B[0m'?`)
+    expect(errorSpy).toHaveBeenCalledWith(
+      `Command '\u001B[31m${command}\u001B[0m' does not exist. Did you mean '\u001B[33mhelloMock\u001B[0m'?`
+    );
   });
 
   it('should display an error if command is not found', async () => {

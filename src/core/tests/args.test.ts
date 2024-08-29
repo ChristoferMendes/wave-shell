@@ -8,9 +8,9 @@ describe('args', () => {
       commandName: 'command',
       namedArgs: {
         flag: 'value',
-        f: true,
+        f: true
       },
-      argsArray: ['--flag', 'value', '-f'],
+      argsArray: ['--flag', 'value', '-f']
     });
   });
 
@@ -19,9 +19,9 @@ describe('args', () => {
     expect(args()).toEqual({
       commandName: 'another-command',
       namedArgs: {
-        option: '123',
+        option: '123'
       },
-      argsArray: ['--option', '123'],
+      argsArray: ['--option', '123']
     });
   });
 
@@ -30,7 +30,7 @@ describe('args', () => {
     expect(args()).toEqual({
       commandName: 'no-args-command',
       namedArgs: {},
-      argsArray: [],
+      argsArray: []
     });
   });
 });

@@ -1,6 +1,6 @@
-import type { ZodError } from "zod";
+import type { ZodError } from 'zod';
 
-function ZodHelper () {
+function ZodHelper() {
   function formatSafeParseErrorMessage(
     // biome-ignore lint/suspicious/noExplicitAny: @TODO: add better types
     errors: ZodError<any>
@@ -10,8 +10,8 @@ function ZodHelper () {
   }
 
   return {
-    formatSafeParseErrorMessage,
-  }
+    formatSafeParseErrorMessage
+  };
 }
 
 export const zodHelper = ZodHelper();
