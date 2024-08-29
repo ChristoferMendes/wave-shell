@@ -13,7 +13,7 @@
     "dev": "bun run src/main.ts",
     "build": "bun src/builder.ts",
     "publish:local": "bun run build && bun test && npm publish",
-    "lint": "pnpm biome lint --unsafe --write",
+    "lint": "biome lint --unsafe --write",
     "format": "biome format --write ."
   },
   "dependencies": {
