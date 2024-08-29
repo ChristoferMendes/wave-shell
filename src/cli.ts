@@ -148,7 +148,7 @@ export class Cli {
         return this;
       }
 
-      this._runCommand(commandName, argsArray, namedArgs);
+      await this._runCommand(commandName, argsArray, namedArgs);
 
       return this;
     }
