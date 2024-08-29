@@ -1,20 +1,23 @@
-import { compileTemplate } from "surfstar";
-import { z } from "zod";
-import { WaveArguments } from "./core/types";
-import { WavePrint } from "./utils/print";
-import { prompt } from "./utils/prompt";
+import type { compileTemplate } from 'surfstar';
+import type { z } from 'zod';
+import type { WaveArguments } from './core/types';
+import type { WavePrint } from './utils/print';
+import type { prompt } from './utils/prompt';
 
-export interface WaveCommand<Args = {}> {
+// biome-ignore lint/suspicious/noExplicitAny: @TODO: add better types
+export interface WaveCommand<Args = Record<string, any>> {
   argsSchema?: () => {
+    // biome-ignore lint/suspicious/noExplicitAny: @TODO: add better types
     argsArraySchema?: z.ZodArray<any, any>;
+    // biome-ignore lint/suspicious/noExplicitAny: @TODO: add better types
     namedArgsSchema?: z.ZodObject<any, any, any>;
   };
   run: (options: WaveRunOptions<Args>) => Promise<void>;
   description?: string;
 }
 
-
-export interface WaveRunOptions<ArgsT = {}> {
+// biome-ignore lint/suspicious/noExplicitAny: @TODO: add better types
+export interface WaveRunOptions<ArgsT = Record<string, any>> {
   args: {
     argsArray: string[];
     namedArgs: WaveArguments['namedArgs'] & ArgsT;
@@ -26,6 +29,5 @@ export interface WaveRunOptions<ArgsT = {}> {
 
 export type WavePrompt = typeof prompt;
 
-export * from "~/core/types";
-export * from "~/utils/types";
-
+export * from '~/core/types';
+export * from '~/utils/types';

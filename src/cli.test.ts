@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, jest, spyOn } from 'bun:test';
-import { join } from 'path';
+import { join } from 'node:path';
 import { Cli } from './cli';
 import { WavePrint } from './utils/print';
 
@@ -28,19 +28,19 @@ describe('Cli', () => {
 
 
   it('should display help when no command is provided', async () => {
-    const printTable = spyOn(cli['print'], 'table');
+    const printTable = spyOn(cli.print, 'table');
 
     await cli.run();
     print.clearLastLines(5);
     
-    expect(printTable).toHaveBeenCalledWith(cli['_getHelpTableData'], {
+    expect(printTable).toHaveBeenCalledWith(cli._getHelpTableData, {
       head: ['Command', 'Description'],
     });
   });
 
   it('should run a command', async () => {
     const command = 'tMock'
-    cli['commands'].set(command, {
+    cli.commands.set(command, {
       run: jest.fn()
     })
 
@@ -48,19 +48,19 @@ describe('Cli', () => {
 
     await cli.run();
 
-    expect(cli['commands'].get(command)?.run).toHaveBeenCalled();
+    expect(cli.commands.get(command)?.run).toHaveBeenCalled();
   });
 
   it('should suggest a command if it does not exist', async () => {
     const command = 'helloMoc';
 
-    cli['commands'].set('helloMock', {
+    cli.commands.set('helloMock', {
       run: jest.fn()
     })
     
     setCommandIntoArgv(command);
 
-    const errorSpy = spyOn(cli['print'], 'error');
+    const errorSpy = spyOn(cli.print, 'error');
 
     await cli.run();
     print.clearLastLines(1);
@@ -73,7 +73,7 @@ describe('Cli', () => {
 
     setCommandIntoArgv(command);
 
-    const errorSpy = spyOn(cli['print'], 'error');
+    const errorSpy = spyOn(cli.print, 'error');
 
     await cli.run();
     print.clearLastLines(1);

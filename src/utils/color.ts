@@ -15,6 +15,8 @@ function WaveColors() {
     bgMagenta: "\x1b[45m",
     bgCyan: "\x1b[46m",
     bgWhite: "\x1b[47m",
+    gray: "\x1b[90m",
+
 
     reset: "\x1b[0m"
   };
@@ -49,6 +51,10 @@ function WaveColors() {
 
   function white(text: string) {
     return `${cliColors.white}${text}${cliColors.reset}`;
+  }
+  
+  function gray(text: string) {
+    return `${cliColors.gray}${text}${cliColors.reset}`;
   }
 
   // Background color functions
@@ -95,7 +101,8 @@ function WaveColors() {
     bgBlue,
     bgMagenta,
     bgCyan,
-    bgWhite
+    bgWhite,
+    gray
   };
 }
 

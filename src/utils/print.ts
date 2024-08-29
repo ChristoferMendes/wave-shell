@@ -1,9 +1,9 @@
-import CliTable3 from "cli-table3";
-import { waveColors } from "~/utils/color";
+import CliTable3 from 'cli-table3';
+import { waveColors } from '~/utils/color';
 
 export function WavePrint(context?: string) {
   function getContext() {
-    return context ? `[${context}]` : '[Logger]'
+    return context ? `[${context}]` : '[Logger]';
   }
 
   function success(...message: string[]) {
@@ -18,8 +18,7 @@ export function WavePrint(context?: string) {
     return console.info(getContext(), ...message);
   }
 
-  function table(data: string[][], options:  CliTable3.TableConstructorOptions = {}): void {
-    let t
+  function table(data: string[][], options: CliTable3.TableConstructorOptions = {}): void {
     const CLI_TABLE_CHARACTERS = {
       // top: color.white('─'),
       'top-mid': '',
@@ -35,23 +34,23 @@ export function WavePrint(context?: string) {
       'mid-mid': '',
       right: '',
       'right-mid': '',
-      middle: ' ',
-    }
-    t = new CliTable3({
+      middle: ' '
+    };
+    const t = new CliTable3({
       chars: CLI_TABLE_CHARACTERS,
       ...options
-    })
-    t.push(...data)
-    console.log(t.toString())
+    });
+    t.push(...data);
+    console.log(t.toString());
   }
 
   function spaceLine() {
-    console.log()
+    console.log();
   }
 
-  function clearLastLines (count: number) {
-    process.stdout.moveCursor(0, -count)
-    process.stdout.clearScreenDown()
+  function clearLastLines(count: number) {
+    process.stdout.moveCursor(0, -count);
+    process.stdout.clearScreenDown();
   }
 
   return {
@@ -61,5 +60,5 @@ export function WavePrint(context?: string) {
     info,
     spaceLine,
     clearLastLines
-  }
+  };
 }

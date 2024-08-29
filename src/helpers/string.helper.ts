@@ -1,5 +1,5 @@
-export class StringHelper {
-  static findBestMatch(mainString: string, targetStrings: string[]) {
+export const stringHelper =  {
+  findBestMatch(mainString: string, targetStrings: string[]) {
     const ratings = [];
     let bestMatchIndex = 0;
 
@@ -15,17 +15,16 @@ export class StringHelper {
     const bestMatch = ratings[bestMatchIndex]
 
     return { ratings: ratings, bestMatch: bestMatch, bestMatchIndex: bestMatchIndex };
-  }
-
-  static compareTwoStrings(first: string, second: string) {
-    first = first.replace(/\s+/g, '')
-    second = second.replace(/\s+/g, '')
+  },
+  compareTwoStrings(firstString: string, secondString: string) {
+    const first = firstString.replace(/\s+/g, '')
+    const second = secondString.replace(/\s+/g, '')
 
     if (first === second) return 1;
 
     if (first.length < 2 || second.length < 2) return 0;
 
-    let firstBigrams = new Map();
+    const firstBigrams = new Map();
     for (let i = 0; i < first.length - 1; i++) {
       const bigram = first.substring(i, i + 2);
       const count = firstBigrams.has(bigram)

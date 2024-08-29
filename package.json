@@ -12,7 +12,9 @@
   "scripts": {
     "dev": "bun run src/main.ts",
     "build": "bun src/builder.ts",
-    "publish:local": "bun run build && bun test && npm publish"
+    "publish:local": "bun run build && bun test && npm publish",
+    "lint": "pnpm biome lint --unsafe --write",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
@@ -21,6 +23,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
     "@types/inquirer": "^9.0.7",
     "bun-plugin-dts": "^0.2.1",
     "bun-types": "latest"

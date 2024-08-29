@@ -1,4 +1,4 @@
-import * as readline from "readline";
+import * as readline from "node:readline";
 import { waveColors } from "./color";
 
 export function Prompt() {
@@ -25,14 +25,14 @@ export function Prompt() {
     const rl = createRl();
 
     return new Promise((resolve) => {
-      rl.question(question + " (y/n) ", (answer) => {
+      rl.question(`${question} (y/n) `, (answer) => {
         rl.close();
         resolve(answer.toLowerCase().startsWith("y"));
       });
     });
   }
 
-  function select(question: string, options: string[]): Promise<string> {
+  function select<T>(question: string,  options: { label: string, value: T }[]): Promise<T> {
     const rl = createRl();
     
     let index = 0;
@@ -44,7 +44,7 @@ export function Prompt() {
     }
 
     function writeQuestion() {
-      process.stdout.write(question + "\n");
+      process.stdout.write(`${question}\n`);
     }
 
     function handleWriteSelectedOption(optionColored: string, i: number) {
@@ -56,7 +56,7 @@ export function Prompt() {
     function writeOptions() {
       options.forEach((option, i) => {
         const optionColored =
-          i === index ? waveColors.green(option) : waveColors.white(option);
+          i === index ? waveColors.green(option.label) : waveColors.white(option.label);
         const prefix = i === index ? "\x1b[32m> " : " ";
 
         if (!isSelected) {
@@ -70,7 +70,7 @@ export function Prompt() {
 
     function handleKeyPress(
       key: { name: string },
-      resolve: (value: string | PromiseLike<string>) => void
+      resolve: (value: T | PromiseLike<T>) => void
     ) {
       const UP_INDEX_CHANGE = -1;
       const DOWN_INDEX_CHANGE = 1;
@@ -83,7 +83,8 @@ export function Prompt() {
         process.stdin.removeAllListeners("keypress");
         rl.pause();
         isSelected = true;
-        resolve(options[index]);
+        const value = options[index].value;
+        resolve(value);
       }
       render();
     }
