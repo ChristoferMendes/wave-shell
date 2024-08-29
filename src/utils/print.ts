@@ -1,9 +1,9 @@
-import CliTable3 from 'cli-table3';
-import { waveColors } from '~/utils/color';
+import CliTable3 from "cli-table3";
+import { waveColors } from "~/utils/color";
 
 export function WavePrint(context?: string) {
   function getContext() {
-    return context ? `[${context}]` : '[Logger]';
+    return context ? `[${context}]` : "[Logger]";
   }
 
   function success(...message: string[]) {
@@ -18,27 +18,27 @@ export function WavePrint(context?: string) {
     return console.info(getContext(), ...message);
   }
 
-  function table(data: string[][], options: CliTable3.TableConstructorOptions = {}): void {
+  function table(
+    data: string[][],
+    options: CliTable3.TableConstructorOptions = {},
+  ): void {
     const CLI_TABLE_CHARACTERS = {
-      // top: color.white('─'),
-      'top-mid': '',
-      // 'top-left': color.white('┌'),
-      'top-right': '',
-      bottom: '',
-      'bottom-mid': '',
-      'bottom-left': '',
-      'bottom-right': '',
-      left: ' ',
-      // 'left-mid': color.white('├'),
-      mid: '',
-      'mid-mid': '',
-      right: '',
-      'right-mid': '',
-      middle: ' '
+      "top-mid": "",
+      "top-right": "",
+      bottom: "",
+      "bottom-mid": "",
+      "bottom-left": "",
+      "bottom-right": "",
+      left: " ",
+      mid: "",
+      "mid-mid": "",
+      right: "",
+      "right-mid": "",
+      middle: " ",
     };
     const t = new CliTable3({
       chars: CLI_TABLE_CHARACTERS,
-      ...options
+      ...options,
     });
     t.push(...data);
     console.log(t.toString());
@@ -59,6 +59,6 @@ export function WavePrint(context?: string) {
     table,
     info,
     spaceLine,
-    clearLastLines
+    clearLastLines,
   };
 }
