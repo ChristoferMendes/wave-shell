@@ -1,10 +1,9 @@
-import dts from 'bun-plugin-dts'
-import { WavePrint } from '~/utils/print'
-
+import dts from 'bun-plugin-dts';
+import { WavePrint } from '~/utils/print';
 
 async function build() {
-  const print = WavePrint('BUILD')
-  print.info('Building project with types')
+  const print = WavePrint('BUILD');
+  print.info('Building project with types');
 
   await Bun.build({
     entrypoints: ['index.ts'],
@@ -12,9 +11,9 @@ async function build() {
     plugins: [dts()],
     target: 'bun',
     minify: true
-  })
+  });
 
-  print.success('Project built!')
+  print.success('Project built!');
 }
 
-build()
+build();

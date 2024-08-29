@@ -1,53 +1,54 @@
-import { existsSync, readdirSync, statSync } from "fs";
-import { join } from "path";
-import { compileTemplate } from "surfstar";
-import { args } from "~/core/args";
-import { StringHelper } from "~/helpers/string.helper";
-import { WaveCommand } from "~/types";
-import { WavePrint } from "~/utils/print";
-import { zodHelper } from "./helpers/zod.helper";
-import { waveColors } from "./utils/color";
-import { prompt } from "./utils/prompt";
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { compileTemplate } from 'surfstar';
+import { args } from '~/core/args';
+import { stringHelper } from '~/helpers/string.helper';
+import type { WaveCommand } from '~/types';
+import { WavePrint } from '~/utils/print';
+import { zodHelper } from './helpers/zod.helper';
+import { waveColors } from './utils/color';
+import { prompt } from './utils/prompt';
+import { WaveError } from './core/errors/wave-error';
 
 export class Cli {
   private commands: Map<string, WaveCommand> = new Map();
   private print: ReturnType<typeof WavePrint>;
-  private _commandExtension: string = '';
+  private _commandExtension = '';
   private readonly _projectRoot: string;
 
   constructor(cliName: string, projectRoot: string) {
     this.print = WavePrint(cliName);
     this._projectRoot = projectRoot;
-    this._defineCommandExtensionBasedOnFiles()
+    this._defineCommandExtensionBasedOnFiles();
     this._registerCommands();
   }
 
-  private get isProdMode () {
-   return this._projectRoot.endsWith('dist')
+  private get isProdMode() {
+    return this._projectRoot.endsWith('dist');
   }
 
-  private _defineCommandExtensionBasedOnFiles () {
+  private _defineCommandExtensionBasedOnFiles() {
     if (this.isProdMode) {
-      this._commandExtension = '.js'
-      return
+      this._commandExtension = '.js';
+      return;
     }
-    
-    this._commandExtension = '.ts'
+
+    this._commandExtension = '.ts';
   }
 
-  private _registerCommands(directory: string = "") {
-    const commandsDirectoryPath = join(this._projectRoot, 'src', "commands", directory);
-    
+  private _registerCommands(directory = '') {
+    const commandsDirectoryPath = join(this._projectRoot, 'src', 'commands', directory);
+
     const isDirectory = existsSync(commandsDirectoryPath);
 
-    if (!isDirectory) return this.print.error("Commands directory not found.");
+    if (!isDirectory) return this.print.error('Commands directory not found.');
 
-    readdirSync(commandsDirectoryPath).forEach((item) => {
+    for (const item of readdirSync(commandsDirectoryPath)) {
       const itemPath = join(commandsDirectoryPath, item);
       const isDirectory = statSync(itemPath).isDirectory();
 
       const hasCommandFile = existsSync(join(itemPath, `${item}-command${this._commandExtension}`));
-      
+
       if (isDirectory && hasCommandFile) {
         this._registerCommands(join(directory, item));
         return;
@@ -63,25 +64,50 @@ export class Cli {
       if (!item.endsWith(this._commandExtension)) return;
 
       this._registerCommand(itemPath);
-    });
+    }
   }
 
   private _registerCommand(itemPath: string) {
     const commandModule = require(itemPath);
 
-    const isInsideDirectory = itemPath.includes("-command");
-    const directoryName = itemPath.split("/").pop()?.replace(`-command.${this._commandExtension}`, "");
+    const isInsideDirectory = itemPath.includes('-command');
+    const directoryName = itemPath.split('/').pop()?.replace(`-command.${this._commandExtension}`, '');
 
     if (isInsideDirectory && directoryName) {
       this.commands.set(directoryName, commandModule.default);
       return;
     }
 
-    const fileName = itemPath.split("/").pop()?.replace(this._commandExtension, "");
-    this.commands.set(
-      commandModule.default.name ?? fileName,
-      commandModule.default
-    );
+    const fileName = itemPath.split('/').pop()?.replace(this._commandExtension, '');
+    this.commands.set(commandModule.default.name ?? fileName, commandModule.default);
+  }
+
+  private async _runCommand(commandName: string, argsArray: string[], namedArgs: Record<string, string | boolean>) {
+    const command = this.commands.get(commandName);
+
+    try {
+      await command?.run({
+        args: { argsArray, namedArgs },
+        print: this.print,
+        compileTemplate,
+        prompt
+      });
+    } catch (e) {
+      const printer = WavePrint(commandName);
+      const isWaveError = e instanceof WaveError;
+
+      if (isWaveError) {
+        printer.spaceLine();
+        printer.error(e.message);
+        return this;
+      }
+
+      if (!this.isProdMode) {
+        console.error(e);
+      }
+
+      printer.error('An unexpected error occurred.');
+    }
   }
 
   async run(): Promise<this> {
@@ -99,13 +125,7 @@ export class Cli {
       const hasValidateArgs = command.argsSchema !== undefined;
 
       if (!hasValidateArgs) {
-        await command.run({
-          args: { argsArray, namedArgs },
-          print: this.print,
-          compileTemplate,
-          prompt,
-        });
-
+        this._runCommand(commandName, argsArray, namedArgs);
         return this;
       }
 
@@ -115,29 +135,20 @@ export class Cli {
       const namedArgsResult = namedArgsSchema?.safeParse(namedArgs);
 
       if (argsArrayResult?.success === false) {
-        const errorMessage = zodHelper.formatSafeParseErrorMessage(
-          argsArrayResult.error
-        );
+        const errorMessage = zodHelper.formatSafeParseErrorMessage(argsArrayResult.error);
 
         this.print.error(errorMessage);
         return this;
       }
 
       if (namedArgsResult?.success === false) {
-        const errorMessage = zodHelper.formatSafeParseErrorMessage(
-          namedArgsResult.error
-        );
+        const errorMessage = zodHelper.formatSafeParseErrorMessage(namedArgsResult.error);
 
         this.print.error(errorMessage);
         return this;
       }
 
-      await command.run({
-        args: { argsArray, namedArgs },
-        print: this.print,
-        compileTemplate,
-        prompt,
-      });
+      this._runCommand(commandName, argsArray, namedArgs);
 
       return this;
     }
@@ -145,9 +156,7 @@ export class Cli {
     const suggestedCommand = this.getSuggestedCommand(commandName);
 
     if (suggestedCommand) {
-      this.print.error(
-        `Command '${commandNameColor}' does not exist. Did you mean '${suggestedCommand}'?`
-      );
+      this.print.error(`Command '${commandNameColor}' does not exist. Did you mean '${suggestedCommand}'?`);
       return this;
     }
 
@@ -162,22 +171,22 @@ export class Cli {
   displayHelp() {
     this.print.spaceLine();
     this.print.table(this._getHelpTableData, {
-      head: ["Command", "Description"],
+      head: ['Command', 'Description']
     });
     this.print.spaceLine();
   }
 
   private get _getHelpTableData() {
     return Array.from(this.commands.entries()).map(([name, command]) => {
-      return [waveColors.blue(name), command.description ?? ""];
+      return [waveColors.blue(name), command.description ?? ''];
     });
   }
 
   private getSuggestedCommand(query: string): string | null {
     const commandNames = Array.from(this.commands.keys());
-    const matches = StringHelper.findBestMatch(query, commandNames);
+    const matches = stringHelper.findBestMatch(query, commandNames);
 
-    const { bestMatch } = matches ?? {}
+    const { bestMatch } = matches ?? {};
 
     if (!bestMatch) return null;
 
